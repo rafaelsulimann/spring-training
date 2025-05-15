@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Table(name = "tb_usuarios")
 @Getter
 @RequiredArgsConstructor
+@NoArgsConstructor(onConstructor_ = @__(@Deprecated))
 public class Usuario {
 
   @Id
