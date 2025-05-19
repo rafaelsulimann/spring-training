@@ -10,7 +10,7 @@ public class CepClient {
 
   private final RestClient restClient;
 
-  public CepClient(RestClient restClient) {
+  public CepClient() {
     this.restClient = RestClient.builder().baseUrl("https://viacep.com.br/ws/").build();
   }
 
