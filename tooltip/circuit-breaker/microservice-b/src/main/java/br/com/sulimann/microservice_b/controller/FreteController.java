@@ -18,7 +18,7 @@ public class FreteController {
   @GetMapping(value = "/{cep}")
   public ResponseEntity<FreteResponse> getFrete(@PathVariable String cep) throws InterruptedException {
     log.info("Iniciando busca de frete para o CEP: {}", cep);
-    Thread.sleep(10_000);
+    Thread.sleep(50_000);
     log.info("Busca de frete para o CEP: {} finalizada", cep);
     return ResponseEntity.ok(new FreteResponse(new BigDecimal(2500)));
   }
