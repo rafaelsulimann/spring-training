@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,17 +22,17 @@ public class FreteClient {
   }
 
   @Retry(name = "retryInstance", fallbackMethod = "fallback")
-  public FreteResponse calcularFrete(String cep) {
+  public FreteResponse calcularFreteRetry(String cep) {
 
     log.info("Calculando frete para o CEP: {}", cep);
     log.info("Tentativa: {}", this.attempts);
     this.attempts++;
 
     var response = this.restClient
-    .get()
-    .uri("/{cep}", cep)
-    .retrieve()
-    .body(FreteResponse.class);
+        .get()
+        .uri("/{cep}", cep)
+        .retrieve()
+        .body(FreteResponse.class);
 
     log.info("Frete calculado com sucesso: {}", response);
 
@@ -39,10 +40,25 @@ public class FreteClient {
 
   }
 
-  public record FreteResponse(BigDecimal valor) {}
+  @CircuitBreaker(name = "circuitbreakerInstance")
+  public FreteResponse calcularFreteCircuitBreaker(String cep) {
+
+    log.info("Tentativa: {}", this.attempts);
+    this.attempts++;
+
+    var response = this.restClient
+        .get()
+        .uri("/{cep}", cep)
+        .retrieve()
+        .body(FreteResponse.class);
+
+    return response;
+  }
+
+  public record FreteResponse(BigDecimal valor) {
+  }
 
   public FreteResponse fallback(String cep, Exception e) {
-    log.warn("Erro ao calcular frete para o CEP: {}", cep, e);
     return new FreteResponse(BigDecimal.ZERO);
   }
 

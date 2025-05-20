@@ -19,9 +19,15 @@ public class CalculoController {
     this.freteClient = freteClient;
   }
 
-  @GetMapping(value = "/frete/{cep}")
+  @GetMapping(value = "/frete/{cep}/retry")
   public ResponseEntity<FreteResponse> calcularFrete(@PathVariable String cep) {
-    var freteResponse = this.freteClient.calcularFrete(cep);
+    var freteResponse = this.freteClient.calcularFreteRetry(cep);
+    return ResponseEntity.ok(freteResponse);
+  }
+
+  @GetMapping(value = "/frete/{cep}/circuit-breaker")
+  public ResponseEntity<FreteResponse> calcularFreteCircuitBreaker(@PathVariable String cep) {
+    var freteResponse = this.freteClient.calcularFreteCircuitBreaker(cep);
     return ResponseEntity.ok(freteResponse);
   }
 }
