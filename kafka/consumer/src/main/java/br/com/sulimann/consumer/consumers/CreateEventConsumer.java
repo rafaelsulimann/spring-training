@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import br.com.sulimann.consumer.dtos.CreateEventRequest;
+import br.com.sulimann.utils.JSONUtilities;
+
 @Component
 public class CreateEventConsumer {
 
@@ -12,6 +15,7 @@ public class CreateEventConsumer {
 
   @KafkaListener(topics = "create-event", groupId = "group-id")
   public void listen(String message) {
-    logger.info("Mensagem recebida: {}", message);
+    var createEventRequest = JSONUtilities.create().withParseLocalDate().fromJson(message, CreateEventRequest.class);
+    logger.info("Mensagem recebida: {}", createEventRequest);
   }
 }
